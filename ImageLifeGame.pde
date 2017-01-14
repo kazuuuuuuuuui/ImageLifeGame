@@ -1,36 +1,32 @@
-PImage img;
-
 boolean[][] now;
 boolean[][] next;
 
-boolean start;
+int w, h;
 
 void setup() 
 {
-  start = false;
+  size(500, 500);//画像と合わせてるのがなんかアレ
 
-  size(800, 800);//画像と合わせてるのがなんかアレ
-  img = loadImage("mario.jpg");
-  //img = loadImage("suraimu.jpg");
-  //img = loadImage("pika.jpg");
-  //img = loadImage("pikotaro.jpg");
+  frameRate(4);
 
+  w = width /20;
+  h = height /20;
 
-  now = new boolean[img.width][img.height];
-  next = new boolean[img.width][img.height];
+  now = new boolean[w][h];
+  next = new boolean[w][h];
 
-  for (int i = 0; i< img.width; i++) {
-    for (int j = 0; j< img.height; j++) {
-      color c = img.pixels[img.width * j + i];
-      float average = (red(c)+green(c)+blue(c))/3.0;
-      if (average > 128)
-        now[i][j] = true;
-      else 
+  for (int i = 0; i< w; i++) {
+    for (int j = 0; j< h; j++) {
       now[i][j] = false;
     }
   }
 
-  image(img, 0, 0);
+  now[0][0] = true;
+  now[1][0] = true;
+  now[0][1] = true;
+  now[3][2] = true;
+  now[3][3] = true;
+  now[2][3] = true;
 }
 
 void simulate()
@@ -65,25 +61,21 @@ void simulate()
 
 void draw()
 {
-  if (start) {
-    simulate();
-    loadPixels();
-    for (int i = 0; i < now.length; i++) {
-      for (int j = 0; j < now[i].length; j++) {
-        now[i][j] = next[i][j];
-        color c;
-        if (now[i][j])
-          c = color(255);
-        else
-          c = color(0);
-        pixels[height * j + i] = c;
-      }
+   simulate();
+  //loadPixels();
+  for (int i = 0; i < now.length; i++) {
+    for (int j = 0; j < now[i].length; j++) {
+      now[i][j] = next[i][j];
+      color c;
+      if (now[i][j])
+        c = color(255);
+      else
+        c = color(0);
+      // pixels[height * j + i] = c;
+      fill(c);
+      rect(i*w, j*h, w, h);
     }
-    updatePixels();
   }
-}
 
-void keyPressed()
-{
-  start = true;
+  //updatePixels();
 }
