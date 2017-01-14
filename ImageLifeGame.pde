@@ -5,7 +5,7 @@ int w, h;
 
 void setup() 
 {
-  size(500, 500);//画像と合わせてるのがなんかアレ
+  size(500, 500, P3D);
 
   frameRate(4);
 
@@ -17,16 +17,9 @@ void setup()
 
   for (int i = 0; i< w; i++) {
     for (int j = 0; j< h; j++) {
-      now[i][j] = false;
+      now[i][j] = random(0, 1) < 0.2;
     }
   }
-
-  now[0][0] = true;
-  now[1][0] = true;
-  now[0][1] = true;
-  now[3][2] = true;
-  now[3][3] = true;
-  now[2][3] = true;
 }
 
 void simulate()
@@ -61,21 +54,34 @@ void simulate()
 
 void draw()
 {
-   simulate();
-  //loadPixels();
+  background(0);
+  lights();
+
+  int aaa = 270;
+
+  beginCamera();
+  camera(
+    width/2.0+aaa, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0)*6, 
+    width/2.0+aaa, height/2.0, 0, 
+    0, 1, 0);
+  rotateX(1);
+  endCamera();
+
+
+  simulate();
   for (int i = 0; i < now.length; i++) {
     for (int j = 0; j < now[i].length; j++) {
       now[i][j] = next[i][j];
       color c;
       if (now[i][j])
-        c = color(255);
+        c = color(255, 0, 0);
       else
-        c = color(0);
-      // pixels[height * j + i] = c;
+        c = color(128);
       fill(c);
-      rect(i*w, j*h, w, h);
+      pushMatrix();
+      translate(i*50, j*50, 0);
+      box(50);
+      popMatrix();
     }
   }
-
-  //updatePixels();
 }
